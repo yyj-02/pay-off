@@ -28,29 +28,14 @@ const Dashboard = () => {
                 alt="Payoff"
               />
             </div>
-            <span className="sr-only">Payoff</span>
           </Link>
-          <p className="text-foreground transition-colors hover:text-foreground">
-            Dashboard
+          <p className="text-foreground transition-colors hover:text-foreground text-lg">
+            Payoff
           </p>
         </nav>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="shrink-0 md:hidden"
-            >
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle navigation menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left">
-            <nav className="grid gap-6 text-lg font-medium">
-              <p className="hover:text-foreground">Dashboard</p>
-            </nav>
-          </SheetContent>
-        </Sheet>
+        <div className="shrink-0 md:hidden w-7 h-7">
+          <img className="h-full w-full" src={logo} alt="Payoff" />
+        </div>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
