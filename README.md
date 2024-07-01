@@ -28,11 +28,29 @@ Firebase, React, Twillio, TikTok Auth
 1. Create `.env` from `.env-template`
 1. Create a Firebase project (with Firestore, Functions, Hosting)
 1. Create a Twilio account and add the API key
+1. Create a [TikTok Developer](https://developers.tiktok.com/doc/getting-started-create-an-app) account and add the API key
 
 ```bash
 git clone git@github.com:yyj-02/pay-off.git
 cd pay-off
 npm install
+npm run build
+firebase init hosting # select dist as the folder
+firebase init functions
+firebase init firestore
+```
+
+_Frontend_
+
+```
+npm run deploy-react
+```
+
+_Cloud Functions_
+
+```
+cd functions
+npm run deploy
 ```
 
 ## Usage
