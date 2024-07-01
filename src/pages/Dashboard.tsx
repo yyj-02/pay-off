@@ -1,15 +1,16 @@
+import { CircleUser, Menu } from "lucide-react";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuItem,
-} from "../components/ui/dropdown-menu";
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
+import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Button } from "../components/ui/button";
-import { Sheet, SheetTrigger, SheetContent } from "../components/ui/sheet";
-import { Menu, CircleUser } from "lucide-react";
-import logo from "../assets/logo.png";
+import logo from "@/assets/logo.png";
 
 const Dashboard = () => {
   return (

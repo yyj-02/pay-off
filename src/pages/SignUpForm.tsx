@@ -1,22 +1,23 @@
 import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Link, redirect } from "react-router-dom";
+import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
-import { Label } from "@radix-ui/react-label";
-import { Button } from "../components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Link, redirect } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { auth } from "@/lib/firebase";
+import { toast } from "@/components/ui/use-toast";
 import { useState } from "react";
-import { auth } from "../lib/firebase";
-import { toast } from "../components/ui/use-toast";
 
 const SignUpForm = () => {
   onAuthStateChanged(auth, (user) => {

@@ -1,11 +1,13 @@
+import "./index.css";
+
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import { Dashboard } from "@/pages/Dashboard.tsx";
+import { LoginForm } from "@/pages/LoginForm.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
-import { LoginForm } from "./pages/LoginForm.tsx";
-import { SignUpForm } from "./pages/SignUpForm.tsx";
-import { Toaster } from "./components/ui/toaster.tsx";
-import { Dashboard } from "./pages/Dashboard.tsx";
+import { SignUpForm } from "@/pages/SignUpForm.tsx";
+import { Toaster } from "@/components/ui/toaster.tsx";
 
 const router = createBrowserRouter([
   {
