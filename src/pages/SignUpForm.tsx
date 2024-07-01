@@ -1,3 +1,8 @@
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  updateProfile,
+} from "firebase/auth";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "../components/ui/button";
 import {
@@ -8,9 +13,57 @@ import {
   CardContent,
 } from "../components/ui/card";
 import { Input } from "../components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
+import { useState } from "react";
+import { auth } from "../lib/firebase";
+import { toast } from "../components/ui/use-toast";
 
 const SignUpForm = () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      return redirect("/");
+    }
+  });
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsDisabled(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: name,
+      });
+
+      toast({
+        variant: "default",
+        title: "Account created successfully.",
+      });
+
+      return redirect("/");
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: errorMessage,
+      });
+    } finally {
+      setIsDisabled(false);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="mx-auto max-w-sm">
@@ -21,26 +74,50 @@ const SignUpForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
+          <form onSubmit={onSubmit}>
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="John Doe"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  disabled={isDisabled}
+                />
               </div>
-              <Input id="password" type="password" required />
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isDisabled}
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isDisabled}
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={isDisabled}>
+                Sign up
+              </Button>
             </div>
-            <Button type="submit" className="w-full">
-              Sign up
-            </Button>
-          </div>
+          </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
             <Link to="/login" className="underline">
