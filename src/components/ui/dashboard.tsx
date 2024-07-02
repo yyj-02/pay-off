@@ -5,10 +5,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "./dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "./sheet";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "./button";
 import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 

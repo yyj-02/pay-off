@@ -2,12 +2,13 @@ import "./index.css";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import { Home } from "./pages/Home";
+import { Home } from "@/pages/Home";
 import { LoginForm } from "@/pages/LoginForm.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { SignUpForm } from "@/pages/SignUpForm.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
+import { TopUp } from "@/pages/TopUp";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUpForm />,
+  },
+  {
+    path: "/topup",
+    element: <TopUp />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
