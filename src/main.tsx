@@ -9,6 +9,7 @@ import ReactDOM from "react-dom/client";
 import { SignUpForm } from "@/pages/SignUpForm.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
 import { TopUp } from "@/pages/TopUp";
+import { Withdraw } from "./pages/Withdraw";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/topup",
     element: <TopUp />,
+  },
+  {
+    path: "/withdraw",
+    element: <Withdraw />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
