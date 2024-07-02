@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -15,21 +15,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { addUser } from "@/models/userModel";
 import { auth } from "@/lib/firebase";
 import { toast } from "@/components/ui/use-toast";
 import { useState } from "react";
 
 const SignUpForm = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      return redirect("/");
-    }
-  });
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  const navigate = useNavigate();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      navigate("/");
+    }
+    setIsDisabled(false);
+  });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,12 +48,17 @@ const SignUpForm = () => {
         displayName: name,
       });
 
+      await addUser(userCredential.user.uid, {
+        name,
+        email,
+        password,
+        phoneNumber: null,
+      });
+
       toast({
         variant: "default",
         title: "Account created successfully.",
       });
-
-      return redirect("/");
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
