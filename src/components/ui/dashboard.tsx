@@ -1,3 +1,4 @@
+import { CircleUser, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -5,21 +6,30 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "./sheet";
 
 import { Button } from "@/components/ui/button";
-import { CircleUser } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
+
+export type Pages = {
+  name: string;
+  url: string;
+  current: boolean;
+}[];
 
 type DashboardProps = {
   children: React.ReactNode;
   name?: string;
   handleLogout?: () => void;
+  pages?: Pages;
 };
 
 const Dashboard: React.FC<DashboardProps> = ({
   children,
   name,
   handleLogout,
+  pages = [],
 }) => {
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -37,7 +47,55 @@ const Dashboard: React.FC<DashboardProps> = ({
           <p className="text-foreground transition-colors hover:text-foreground text-lg">
             Payoff
           </p>
+          {pages.map((page) => (
+            <Link
+              key={page.url}
+              to={page.url}
+              className={`${
+                page.current ? "text-foreground" : "text-muted-foreground"
+              } transition-colors hover:text-foreground shrink-0`}
+            >
+              {page.name}
+            </Link>
+          ))}
         </nav>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <nav className="grid gap-6 text-lg font-medium">
+              <div className="flex items-center gap-2 text-lg font-semibold">
+                <div className="h-7 w-7">
+                  <img
+                    className="h-full w-full aspect-square"
+                    src={logo}
+                    alt="Payoff"
+                  />
+                </div>
+                <span className="sr-only">Payoff</span>
+              </div>
+              {pages.map((page) => (
+                <Link
+                  key={page.url}
+                  to={page.url}
+                  className={`${
+                    page.current ? "text-foreground" : "text-muted-foreground"
+                  } hover:text-foreground`}
+                >
+                  {page.name}
+                </Link>
+              ))}
+            </nav>
+          </SheetContent>
+        </Sheet>
         <div className="shrink-0 md:hidden w-7 h-7">
           <img className="h-full w-full" src={logo} alt="Payoff" />
         </div>

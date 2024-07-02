@@ -1,7 +1,7 @@
+import { Dashboard, Pages } from "@/components/ui/dashboard";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 
-import { Dashboard } from "@/components/ui/dashboard";
 import { auth } from "@/lib/firebase";
 import { getUser } from "@/models/userModel";
 import { toast } from "@/components/ui/use-toast";
@@ -29,6 +29,12 @@ const Home = () => {
     fetchUser();
   }, []);
 
+  const pages: Pages = [
+    { name: "Home", url: "/", current: true },
+    { name: "Top up", url: "/topup", current: false },
+    { name: "Withdraw", url: "/withdraw", current: false },
+  ];
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -50,7 +56,7 @@ const Home = () => {
   };
 
   return (
-    <Dashboard name={name} handleLogout={handleLogout}>
+    <Dashboard name={name} handleLogout={handleLogout} pages={pages}>
       <div className="mx-auto grid w-full max-w-6xl gap-2">
         <h1 className="text-3xl font-semibold">Transactions</h1>
       </div>
