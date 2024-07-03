@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [uid, setUid] = useState<string | undefined>();
+  const [hasPhoneNumber, setHasPhoneNumber] = useState<boolean>(false);
   const [name, setName] = useState<string | undefined>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
@@ -27,6 +28,7 @@ const Home = () => {
         const fetchUser = async () => {
           const userObj = await getUser(user.uid);
           setName(userObj?.name);
+          setHasPhoneNumber(!!userObj?.phoneNumber);
         };
 
         const fetchTransactions = async () => {
@@ -69,7 +71,13 @@ const Home = () => {
   };
 
   return (
-    <Dashboard uid={uid} name={name} handleLogout={handleLogout} pages={pages}>
+    <Dashboard
+      uid={uid}
+      name={name}
+      handleLogout={handleLogout}
+      pages={pages}
+      hasPhoneNumber={hasPhoneNumber}
+    >
       <div className="mx-auto grid w-full max-w-6xl gap-2">
         <h1 className="text-3xl font-semibold">Transactions</h1>
       </div>

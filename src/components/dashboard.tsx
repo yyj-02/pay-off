@@ -12,6 +12,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { PhoneNumber } from "./phone-number";
+import { QrCode } from "./qr-code";
 import logo from "@/assets/logo.png";
 import { useState } from "react";
 
@@ -27,6 +28,7 @@ type DashboardProps = {
   name?: string;
   handleLogout?: () => void;
   pages?: Pages;
+  hasPhoneNumber?: boolean;
 };
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -35,8 +37,10 @@ const Dashboard: React.FC<DashboardProps> = ({
   name,
   handleLogout,
   pages = [],
+  hasPhoneNumber = false,
 }) => {
   const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
+  const [isQrCodeOpen, setIsQrCodeOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -126,7 +130,11 @@ const Dashboard: React.FC<DashboardProps> = ({
               <DropdownMenuItem onClick={() => setIsPhoneNumberOpen(true)}>
                 My Phone Number
               </DropdownMenuItem>
-              <DropdownMenuItem>QR Pay</DropdownMenuItem>
+              {hasPhoneNumber && (
+                <DropdownMenuItem onClick={() => setIsQrCodeOpen(true)}>
+                  QR Pay
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive focus:bg-destructive/5"
@@ -146,6 +154,7 @@ const Dashboard: React.FC<DashboardProps> = ({
         onOpenChange={setIsPhoneNumberOpen}
         uid={uid}
       />
+      <QrCode isOpen={isQrCodeOpen} onOpenChange={setIsQrCodeOpen} uid={uid} />
     </div>
   );
 };

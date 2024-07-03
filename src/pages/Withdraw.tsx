@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 const Withdraw = () => {
   const [uid, setUid] = useState<string | undefined>();
   const [name, setName] = useState<string | undefined>();
+  const [hasPhoneNumber, setHasPhoneNumber] = useState<boolean>(false);
   const [amount, setAmount] = useState<number>(0);
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -29,6 +30,7 @@ const Withdraw = () => {
         const fetchUser = async () => {
           const userObj = await getUser(user.uid);
           setName(userObj?.name);
+          setHasPhoneNumber(!!userObj?.phoneNumber);
         };
 
         fetchUser();
@@ -110,7 +112,13 @@ const Withdraw = () => {
   };
 
   return (
-    <Dashboard uid={uid} name={name} handleLogout={handleLogout} pages={pages}>
+    <Dashboard
+      uid={uid}
+      name={name}
+      handleLogout={handleLogout}
+      pages={pages}
+      hasPhoneNumber={hasPhoneNumber}
+    >
       <div className="mx-auto grid w-full max-w-6xl gap-2">
         <h1 className="text-3xl font-semibold">Withdraw</h1>
       </div>
