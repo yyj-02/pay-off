@@ -13,7 +13,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
 }) => {
   const [value, setValue] = useState("");
 
-  const handleAmountUpdate: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleAmountUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
 
     // Check if value is empty or matches the regex pattern

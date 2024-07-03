@@ -3,4 +3,5 @@ export type User = {
   email: string;
   password: string;
   phoneNumber: string | null;
+  balance: number;
 };

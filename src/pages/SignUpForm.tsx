@@ -53,6 +53,7 @@ const SignUpForm = () => {
         email,
         password,
         phoneNumber: null,
+        balance: 0,
       });
 
       toast({
