@@ -1,6 +1,5 @@
-import { ChangeEventHandler, useEffect, useState } from "react";
-
 import { Input } from "./input";
+import { useState } from "react";
 
 type CurrencyInputProps = {
   setAmount?: (amount: number) => void;
