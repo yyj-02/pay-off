@@ -91,7 +91,7 @@ const QrCode: React.FC<QrCodeProps> = ({ uid, isOpen, onOpenChange }) => {
                 </p>
               </div>
             )}
-            <Button onClick={downloadQr}>Save</Button>
+            <Button onClick={downloadQr}>Save to album</Button>
           </DrawerFooter>
         </div>
       </DrawerContent>

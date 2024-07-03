@@ -123,7 +123,7 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
               </div>
             )}
             <Button onClick={handleButtonClick} disabled={isDisabled}>
-              {number ? "Copy" : "Submit"}
+              {number ? "Copy to clipboard" : "Update number"}
             </Button>
           </DrawerFooter>
         </div>
