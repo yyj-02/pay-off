@@ -1,4 +1,4 @@
-import { Dashboard, Pages } from "@/components/ui/dashboard";
+import { Dashboard, Pages } from "@/components/dashboard";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 
@@ -11,6 +11,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const [uid, setUid] = useState<string | undefined>();
   const [name, setName] = useState<string | undefined>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
@@ -21,6 +22,8 @@ const Home = () => {
       if (!user) {
         navigate("/login");
       } else {
+        setUid(user.uid);
+
         const fetchUser = async () => {
           const userObj = await getUser(user.uid);
           setName(userObj?.name);
@@ -66,7 +69,7 @@ const Home = () => {
   };
 
   return (
-    <Dashboard name={name} handleLogout={handleLogout} pages={pages}>
+    <Dashboard uid={uid} name={name} handleLogout={handleLogout} pages={pages}>
       <div className="mx-auto grid w-full max-w-6xl gap-2">
         <h1 className="text-3xl font-semibold">Transactions</h1>
       </div>

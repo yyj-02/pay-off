@@ -4,13 +4,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "./sheet";
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-import { Button } from "./button";
+import { Button } from "@/components/ui/button";
+import { Drawer } from "@/components/ui/drawer";
 import { Link } from "react-router-dom";
+import { PhoneNumber } from "./phone-number";
 import logo from "@/assets/logo.png";
+import { useState } from "react";
 
 export type Pages = {
   name: string;
@@ -20,6 +24,7 @@ export type Pages = {
 
 type DashboardProps = {
   children: React.ReactNode;
+  uid: string | undefined;
   name?: string;
   handleLogout?: () => void;
   pages?: Pages;
@@ -27,10 +32,13 @@ type DashboardProps = {
 
 const Dashboard: React.FC<DashboardProps> = ({
   children,
+  uid,
   name,
   handleLogout,
   pages = [],
 }) => {
+  const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -115,6 +123,12 @@ const Dashboard: React.FC<DashboardProps> = ({
               <DropdownMenuLabel>
                 {name ? `Hello, ${name}!` : "My Account"}
               </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setIsPhoneNumberOpen(true)}>
+                My Phone Number
+              </DropdownMenuItem>
+              <DropdownMenuItem>QR Pay</DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive focus:bg-destructive/5"
                 onClick={handleLogout}
@@ -128,6 +142,11 @@ const Dashboard: React.FC<DashboardProps> = ({
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
         {children}
       </main>
+      <PhoneNumber
+        isOpen={isPhoneNumberOpen}
+        onOpenChange={setIsPhoneNumberOpen}
+        uid={uid}
+      />
     </div>
   );
 };

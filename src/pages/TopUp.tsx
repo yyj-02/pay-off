@@ -1,4 +1,4 @@
-import { Dashboard, Pages } from "@/components/ui/dashboard";
+import { Dashboard, Pages } from "@/components/dashboard";
 import { getUser, updateBalance } from "@/models/userModel";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -108,7 +108,7 @@ const TopUp = () => {
   };
 
   return (
-    <Dashboard name={name} handleLogout={handleLogout} pages={pages}>
+    <Dashboard uid={uid} name={name} handleLogout={handleLogout} pages={pages}>
       <div className="mx-auto grid w-full max-w-6xl gap-2">
         <h1 className="text-3xl font-semibold">Top Up</h1>
       </div>
