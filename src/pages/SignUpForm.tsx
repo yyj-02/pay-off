@@ -11,6 +11,7 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,6 @@ import { Label } from "@/components/ui/label";
 import { addUser } from "@/models/userModel";
 import { auth } from "@/lib/firebase";
 import { toast } from "@/components/ui/use-toast";
-import { useState } from "react";
 
 const SignUpForm = () => {
   const [name, setName] = useState("");
@@ -27,12 +27,18 @@ const SignUpForm = () => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const navigate = useNavigate();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      navigate("/");
-    }
-    setIsDisabled(false);
-  });
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/");
+      } else {
+        setIsDisabled(false);
+      }
+    });
+
+    return () => unsubscribeAuth();
+  }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

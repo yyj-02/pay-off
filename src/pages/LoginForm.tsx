@@ -7,13 +7,13 @@ import {
 } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { auth } from "@/lib/firebase";
 import { toast } from "@/components/ui/use-toast";
-import { useState } from "react";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -21,12 +21,18 @@ const LoginForm = () => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   const navigate = useNavigate();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      navigate("/");
-    }
-    setIsDisabled(false);
-  });
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate("/");
+      } else {
+        setIsDisabled(false);
+      }
+    });
+
+    return () => unsubscribeAuth();
+  }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
