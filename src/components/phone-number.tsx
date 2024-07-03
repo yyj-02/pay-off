@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { getUser } from "@/models/userModel";
+import { toast } from "@/components/ui/use-toast";
 
 type PhoneNumberProps = {
   uid: string | undefined;
@@ -35,6 +36,17 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
     fetchNumber();
   }, [uid]);
 
+  const handleButtonClick = () => {
+    if (number) {
+      navigator.clipboard.writeText(number);
+
+      toast({
+        variant: "default",
+        title: "Number copied to clipboard",
+      });
+    }
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContent>
@@ -49,12 +61,19 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
                 : "Add your phone number to send or receive your first payment."}
             </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2"></div>
-            <div className="mt-3 h-[120px]"></div>
+          <div className="p-4">
+            <div className="h-[120px] flex items-center justify-center">
+              {number ? (
+                <p className="text-3xl tracking-wide">{number}</p>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
           <DrawerFooter>
-            <Button>Submit</Button>
+            <Button onClick={handleButtonClick}>
+              {number ? "Copy" : "Submit"}
+            </Button>
           </DrawerFooter>
         </div>
       </DrawerContent>
