@@ -118,7 +118,7 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
                   >
                     yeohyongjie@outlook.com
                   </a>{" "}
-                  to access the SMS feature. to access the SMS feature.
+                  to access the SMS feature
                 </p>
               </div>
             )}
