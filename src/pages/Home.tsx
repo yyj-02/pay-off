@@ -2,6 +2,7 @@ import { Dashboard, Pages } from "@/components/dashboard";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Transaction } from "@/types/transaction";
 import { auth } from "@/lib/firebase";
 import { formatDate } from "@/lib/utils";
@@ -15,6 +16,7 @@ const Home = () => {
   const [hasPhoneNumber, setHasPhoneNumber] = useState<boolean>(false);
   const [name, setName] = useState<string | undefined>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -77,31 +79,53 @@ const Home = () => {
       handleLogout={handleLogout}
       pages={pages}
       hasPhoneNumber={hasPhoneNumber}
+      openPhoneNumber={isPhoneNumberOpen}
+      onChangePhoneNumberOpen={setIsPhoneNumberOpen}
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-2">
-        <h1 className="text-3xl font-semibold">Transactions</h1>
-      </div>
-      <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[500px_1fr] lg:grid-cols-[750px_1fr]">
-        <div className="grid gap-4 text-sm">
-          {transactions.map((transaction) => (
-            <p key={transaction.createdAt}>
-              {transaction.type === "topup" ? (
-                <span className="text-emerald-400">
-                  You top up ${transaction.amount} on{" "}
-                  {formatDate(transaction.createdAt)}
-                </span>
-              ) : transaction.type === "withdraw" ? (
-                <span className="text-rose-400">
-                  You withdraw ${transaction.amount} on{" "}
-                  {formatDate(transaction.createdAt)}
-                </span>
-              ) : transaction.type === "transfer" ? (
-                <span>xxx</span>
-              ) : null}
-            </p>
-          ))}
-        </div>
-      </div>
+      {hasPhoneNumber || (
+        <>
+          <div className="mx-auto grid w-full max-w-6xl gap-2">
+            <h1 className="text-3xl font-semibold">
+              Add a phone number to start 🙌
+            </h1>
+            <Button
+              onClick={() => setIsPhoneNumberOpen(true)}
+              className="w-full md:w-fit mt-4"
+            >
+              Add Phone Number
+            </Button>
+          </div>
+        </>
+      )}
+      {(transactions.length !== 0 || hasPhoneNumber) && (
+        <>
+          <div className="mx-auto grid w-full max-w-6xl gap-2">
+            <h1 className="text-3xl font-semibold">Transactions</h1>
+          </div>
+          <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[500px_1fr] lg:grid-cols-[750px_1fr]">
+            <div className="grid gap-4 text-sm">
+              {transactions.length === 0 && <p>No transactions yet 😌</p>}
+              {transactions.map((transaction) => (
+                <p key={transaction.createdAt}>
+                  {transaction.type === "topup" ? (
+                    <span className="text-emerald-400">
+                      You top up ${transaction.amount} on{" "}
+                      {formatDate(transaction.createdAt)}
+                    </span>
+                  ) : transaction.type === "withdraw" ? (
+                    <span className="text-rose-400">
+                      You withdraw ${transaction.amount} on{" "}
+                      {formatDate(transaction.createdAt)}
+                    </span>
+                  ) : transaction.type === "transfer" ? (
+                    <span>xxx</span>
+                  ) : null}
+                </p>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </Dashboard>
   );
 };

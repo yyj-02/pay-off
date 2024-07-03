@@ -8,13 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { PhoneNumber } from "./phone-number";
 import { QrCode } from "./qr-code";
 import logo from "@/assets/logo.png";
-import { useState } from "react";
 
 export type Pages = {
   name: string;
@@ -29,6 +29,8 @@ type DashboardProps = {
   handleLogout?: () => void;
   pages?: Pages;
   hasPhoneNumber?: boolean;
+  openPhoneNumber?: boolean;
+  onChangePhoneNumberOpen?: (isOpen: boolean) => void;
 };
 
 const Dashboard: React.FC<DashboardProps> = ({
@@ -38,9 +40,23 @@ const Dashboard: React.FC<DashboardProps> = ({
   handleLogout,
   pages = [],
   hasPhoneNumber = false,
+  openPhoneNumber = false,
+  onChangePhoneNumberOpen,
 }) => {
   const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
   const [isQrCodeOpen, setIsQrCodeOpen] = useState(false);
+
+  useEffect(() => {
+    if (onChangePhoneNumberOpen) {
+      setIsPhoneNumberOpen(openPhoneNumber);
+    }
+  }, [openPhoneNumber, onChangePhoneNumberOpen]);
+
+  useEffect(() => {
+    if (onChangePhoneNumberOpen) {
+      onChangePhoneNumberOpen(isPhoneNumberOpen);
+    }
+  }, [isPhoneNumberOpen, onChangePhoneNumberOpen]);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
