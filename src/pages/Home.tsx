@@ -1,7 +1,7 @@
 import { Dashboard, Pages } from "@/components/dashboard";
 import { getUser, getUserNameOrPhoneNumberById } from "@/models/userModel";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Transaction } from "@/types/transaction";
