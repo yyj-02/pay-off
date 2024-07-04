@@ -111,6 +111,7 @@ const Withdraw = () => {
     setIsDisabled(false);
   };
 
+  if (!uid) return null;
   return (
     <Dashboard
       uid={uid}

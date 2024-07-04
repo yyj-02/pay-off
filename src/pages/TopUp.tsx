@@ -109,6 +109,7 @@ const TopUp = () => {
     setIsDisabled(false);
   };
 
+  if (!uid) return null;
   return (
     <Dashboard
       uid={uid}

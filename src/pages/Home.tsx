@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [uid, setUid] = useState<string | undefined>();
-  const [hasPhoneNumber, setHasPhoneNumber] = useState<boolean>(false);
+  const [hasPhoneNumber, setHasPhoneNumber] = useState<boolean>(true);
   const [name, setName] = useState<string | undefined>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
@@ -72,6 +72,7 @@ const Home = () => {
       });
   };
 
+  if (!uid) return null;
   return (
     <Dashboard
       uid={uid}
