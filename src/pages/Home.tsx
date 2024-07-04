@@ -1,13 +1,13 @@
 import { Dashboard, Pages } from "@/components/dashboard";
+import { getUser, getUserNameOrPhoneNumberById } from "@/models/userModel";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Transaction } from "@/types/transaction";
 import { auth } from "@/lib/firebase";
 import { formatDate } from "@/lib/utils";
 import { getAllTransactions } from "@/models/transactionModel";
-import { getUser } from "@/models/userModel";
 import { toast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -72,6 +72,26 @@ const Home = () => {
       });
   };
 
+  const [idToName, setIdToName] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const fetchNames = async () => {
+      const cleanedTransactions = transactions.filter(
+        (transaction) => transaction.to
+      );
+      const ids = cleanedTransactions.map((transaction) => transaction.to!);
+      const names = await Promise.all(
+        ids.map((id) => getUserNameOrPhoneNumberById(id))
+      );
+      const idToName: Record<string, string> = {};
+      ids.forEach((id, index) => {
+        idToName[id] = names[index];
+      });
+      setIdToName(idToName);
+    };
+    fetchNames();
+  }, [transactions]);
+
   if (!uid) return null;
   return (
     <Dashboard
@@ -119,7 +139,11 @@ const Home = () => {
                       {formatDate(transaction.createdAt)}
                     </span>
                   ) : transaction.type === "transfer" ? (
-                    <span>xxx</span>
+                    <span>
+                      You transfer ${transaction.amount} to{" "}
+                      {transaction.to ? idToName[transaction.to] : "someone"} on{" "}
+                      {formatDate(transaction.createdAt)}
+                    </span>
                   ) : null}
                 </p>
               ))}

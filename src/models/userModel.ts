@@ -40,4 +40,15 @@ const updateBalance = async (
   }
 };
 
-export { addUser, getUser, updateUserPhoneNumber, updateBalance };
+const getUserNameOrPhoneNumberById = async (uid: string): Promise<string> => {
+  const user = await getUser(uid);
+  return user?.name || user?.phoneNumber || "someone";
+};
+
+export {
+  addUser,
+  getUser,
+  updateUserPhoneNumber,
+  updateBalance,
+  getUserNameOrPhoneNumberById,
+};
