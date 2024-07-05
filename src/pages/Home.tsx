@@ -1,3 +1,4 @@
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Dashboard, Pages } from "@/components/dashboard";
 import {
   Tooltip,
@@ -10,6 +11,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Transaction } from "@/types/transaction";
+import { User } from "@/types/user";
 import { auth } from "@/lib/firebase";
 import { formatDate } from "@/lib/utils";
 import { getAllTransactions } from "@/models/transactionModel";
@@ -18,8 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [uid, setUid] = useState<string | undefined>();
-  const [hasPhoneNumber, setHasPhoneNumber] = useState<boolean>(true);
-  const [name, setName] = useState<string | undefined>();
+  const [user, setUser] = useState<User | null>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,8 +36,7 @@ const Home = () => {
 
         const fetchUser = async () => {
           const userObj = await getUser(user.uid);
-          setName(userObj?.name);
-          setHasPhoneNumber(!!userObj?.phoneNumber);
+          setUser(userObj);
         };
 
         const fetchTransactions = async () => {
@@ -112,17 +112,17 @@ const Home = () => {
   return (
     <Dashboard
       uid={uid}
-      name={name}
+      name={user?.name}
       handleLogout={handleLogout}
       pages={pages}
-      hasPhoneNumber={hasPhoneNumber}
+      hasPhoneNumber={user?.phoneNumber !== null}
       openPhoneNumber={isPhoneNumberOpen}
       onChangePhoneNumberOpen={setIsPhoneNumberOpen}
     >
-      {hasPhoneNumber || (
+      {user?.phoneNumber === null && (
         <>
           <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">
+            <h1 className="pb-2 text-3xl font-semibold">
               Add a phone number to start 🙌
             </h1>
             <Button
@@ -134,10 +134,22 @@ const Home = () => {
           </div>
         </>
       )}
-      {(transactions.length !== 0 || hasPhoneNumber) && (
+      <div className="mx-auto grid w-full max-w-6xl gap-2">
+        <Card>
+          <CardContent>
+            <p className="pt-6 pb-3">Your Balance</p>
+            <p className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+              ${user?.balance}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      {(transactions.length !== 0 || user?.phoneNumber !== null) && (
         <>
           <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">Transactions</h1>
+            <h2 className="border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0">
+              Transactions
+            </h2>
           </div>
           <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[500px_1fr] lg:grid-cols-[750px_1fr]">
             <div className="grid gap-4 text-sm">
