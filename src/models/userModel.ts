@@ -33,10 +33,19 @@ const updateBalance = async (
   action: "inc" | "dec"
 ): Promise<void> => {
   const userRef = doc(db, "users", uid);
+  const user = await getUser(uid);
   if (action === "inc") {
-    await setDoc(userRef, { balance: increment(amount) }, { merge: true });
+    await setDoc(
+      userRef,
+      { balance: user?.balance ? user.balance + amount : amount },
+      { merge: true }
+    );
   } else {
-    await setDoc(userRef, { balance: increment(-amount) }, { merge: true });
+    await setDoc(
+      userRef,
+      { balance: user?.balance ? user.balance - amount : 0 },
+      { merge: true }
+    );
   }
 };
 

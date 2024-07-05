@@ -91,7 +91,9 @@ const TopUp = () => {
           title: "Top up successful",
         });
 
-        navigate("/");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       } catch (error: any) {
         const errorCode = error.code;
         const errorMessage = error.message;

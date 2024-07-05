@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { getUser, getUserNameOrPhoneNumberById } from "@/models/userModel";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Transaction } from "@/types/transaction";
@@ -24,6 +24,8 @@ const Home = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const [showAddNumber, setShowAddNumber] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,6 +53,23 @@ const Home = () => {
 
     return () => unsubscribeAuth();
   }, []);
+
+  useEffect(() => {
+    if (!user?.phoneNumber) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        setShowAddNumber(true);
+      }, 1000);
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = undefined;
+      }
+      setShowAddNumber(false);
+    }
+  }, [user]);
 
   const pages: Pages = [
     { name: "Home", url: "/", current: true },
@@ -119,7 +138,7 @@ const Home = () => {
       openPhoneNumber={isPhoneNumberOpen}
       onChangePhoneNumberOpen={setIsPhoneNumberOpen}
     >
-      {!user?.phoneNumber && (
+      {showAddNumber && (
         <>
           <div className="mx-auto grid w-full max-w-6xl gap-2">
             <h1 className="pb-2 text-3xl font-semibold">
