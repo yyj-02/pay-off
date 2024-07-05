@@ -6,7 +6,7 @@
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
-
+/* eslint-disable */
 const twilio = require("twilio");
 const bodyParser = require("body-parser");
 const MessagingResponse = require("twilio").twiml.MessagingResponse;

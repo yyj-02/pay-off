@@ -16,7 +16,7 @@ const findUserByPhoneNumber = async (
     return null;
   }
 
-  return { id: snapshot.docs[0].id, data: snapshot.docs[0].data() as User };
+  return {id: snapshot.docs[0].id, data: snapshot.docs[0].data() as User};
 };
 
 const updateUserBalance = async (
@@ -25,7 +25,7 @@ const updateUserBalance = async (
   newBalance: number
 ): Promise<void> => {
   const userRef = db.collection("users").doc(id);
-  await userRef.update({ balance: newBalance });
+  await userRef.update({balance: newBalance});
 };
 
-export { findUserByPhoneNumber, updateUserBalance };
+export {findUserByPhoneNumber, updateUserBalance};

@@ -11,7 +11,7 @@ const parseMessageBody = (input: string) => {
   const phoneNumber = phoneMatch ? "+" + phoneMatch[1] : null;
   const amount = amountMatch ? amountMatch[1] : null;
 
-  return { phoneNumber, amount };
+  return {phoneNumber, amount};
 };
 
-export { parseMessageBody };
+export {parseMessageBody};

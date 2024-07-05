@@ -24,4 +24,4 @@ const addTransfer = async (
   await db.collection("transactions").doc(id).set(transferTransaction);
 };
 
-export { addTransfer };
+export {addTransfer};
