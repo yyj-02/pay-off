@@ -119,7 +119,7 @@ const Home = () => {
       openPhoneNumber={isPhoneNumberOpen}
       onChangePhoneNumberOpen={setIsPhoneNumberOpen}
     >
-      {user?.phoneNumber === null && (
+      {!user?.phoneNumber && (
         <>
           <div className="mx-auto grid w-full max-w-6xl gap-2">
             <h1 className="pb-2 text-3xl font-semibold">
@@ -127,7 +127,7 @@ const Home = () => {
             </h1>
             <Button
               onClick={() => setIsPhoneNumberOpen(true)}
-              className="w-full md:w-fit mt-4"
+              className="w-full md:w-fit mt-2"
             >
               Add Phone Number
             </Button>

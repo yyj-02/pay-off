@@ -14,6 +14,7 @@ import { Info } from "lucide-react";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { toast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 type PhoneNumberProps = {
   uid: string | undefined;
@@ -29,6 +30,8 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
   const [number, setNumber] = useState<string | null | undefined>();
   const [numberInput, setNumberInput] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(false);
+
+  const navigate = useNavigate();
 
   const fetchNumber = async () => {
     if (!uid) return;
@@ -59,6 +62,8 @@ const PhoneNumber: React.FC<PhoneNumberProps> = ({
           variant: "default",
           title: "Phone number updated",
         });
+
+        navigate(0);
       } catch (error) {
         toast({
           variant: "destructive",
