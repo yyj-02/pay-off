@@ -1,4 +1,4 @@
-import { doc, getDoc, increment, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { User } from "@/types/user";
 import { db } from "@/lib/firebase";
