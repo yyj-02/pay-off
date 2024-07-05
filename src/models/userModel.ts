@@ -40,9 +40,13 @@ const updateBalance = async (
   }
 };
 
-const getUserNameOrPhoneNumberById = async (uid: string): Promise<string> => {
+const getUserNameOrPhoneNumberById = async (uid: string) => {
   const user = await getUser(uid);
-  return user?.name || user?.phoneNumber || "someone";
+  return {
+    id: uid,
+    name: user?.name,
+    phoneNumber: user?.phoneNumber,
+  };
 };
 
 export {

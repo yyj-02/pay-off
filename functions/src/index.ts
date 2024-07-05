@@ -10,6 +10,8 @@
 const twilio = require("twilio");
 const bodyParser = require("body-parser");
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
+// All available logging functions
+const { log } = require("firebase-functions/logger");
 
 import "dotenv/config";
 
@@ -44,19 +46,21 @@ export const handleTransaction = onRequest(async (req, res) => {
       res.status(405).send("Method Not Allowed");
     }
 
-    console.log("[BODY]", req.body);
-    console.log("[MESSAGE]", req.body.Body);
-
     twilio.webhook(process.env.AUTH_TOKEN)(req, res, async () => {
-      const { Phone, Body, SmsMessageSid } = req.body;
+      log("Receive incoming message from Twilio");
+      const { From, Body, SmsMessageSid } = req.body;
+      log("Phone: ", From);
+      log("Body: ", Body);
 
       const { phoneNumber, amount } = parseMessageBody(Body);
+      log("Parsed phone number: ", phoneNumber);
+      log("Parsed amount: ", amount);
 
       if (
         !phoneNumber ||
         !amount ||
         !/^(?!-)\d*\.?\d{0,2}$/.test(amount) ||
-        Phone === phoneNumber
+        From === phoneNumber
       ) {
         const response = new MessagingResponse();
         response.message(
@@ -67,8 +71,10 @@ export const handleTransaction = onRequest(async (req, res) => {
         return;
       }
 
-      const sender = await findUserByPhoneNumber(db, Phone);
+      const sender = await findUserByPhoneNumber(db, From);
       const recipient = await findUserByPhoneNumber(db, phoneNumber);
+      log("Sender: ", sender);
+      log("Recipient: ", recipient);
 
       if (!sender || !recipient) {
         const response = new MessagingResponse();
@@ -88,6 +94,7 @@ export const handleTransaction = onRequest(async (req, res) => {
         return;
       }
 
+      log("Executing transfer...");
       await addTransfer(db, SmsMessageSid, sender.id, recipient.id, amountNum);
       await updateUserBalance(db, sender.id, sender.data.balance - amountNum);
       await updateUserBalance(
@@ -95,6 +102,7 @@ export const handleTransaction = onRequest(async (req, res) => {
         recipient.id,
         recipient.data.balance + amountNum
       );
+      log("Transfer successful.");
 
       // Twilio Messaging URL - receives incoming messages from Twilio
       const response = new MessagingResponse();

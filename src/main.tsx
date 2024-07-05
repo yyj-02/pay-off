@@ -8,6 +8,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { SignUpForm } from "@/pages/SignUpForm.tsx";
 import { Toaster } from "@/components/ui/toaster.tsx";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { TopUp } from "@/pages/TopUp";
 import { Withdraw } from "./pages/Withdraw";
 
@@ -35,7 +36,9 @@ const router = createBrowserRouter([
 ]);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <TooltipProvider>
+      <RouterProvider router={router} />
+    </TooltipProvider>
     <Toaster />
   </React.StrictMode>
 );

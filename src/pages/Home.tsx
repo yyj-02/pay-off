@@ -1,4 +1,9 @@
 import { Dashboard, Pages } from "@/components/dashboard";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getUser, getUserNameOrPhoneNumberById } from "@/models/userModel";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -17,6 +22,7 @@ const Home = () => {
   const [name, setName] = useState<string | undefined>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isPhoneNumberOpen, setIsPhoneNumberOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -72,22 +78,32 @@ const Home = () => {
       });
   };
 
-  const [idToName, setIdToName] = useState<Record<string, string>>({});
+  const [idToName, setIdToName] = useState<
+    Record<
+      string,
+      { name: string | undefined; phoneNumber: string | null | undefined }
+    >
+  >({});
 
   useEffect(() => {
     const fetchNames = async () => {
-      const cleanedTransactions = transactions.filter(
-        (transaction) => transaction.to
-      );
-      const ids = cleanedTransactions.map((transaction) => transaction.to!);
-      const names = await Promise.all(
+      setIsLoading(true);
+      const ids = transactions
+        .flatMap((transaction) => [transaction.to!, transaction.from!])
+        .filter(Boolean);
+
+      const namesAndPhoneNumbers = await Promise.all(
         ids.map((id) => getUserNameOrPhoneNumberById(id))
       );
-      const idToName: Record<string, string> = {};
+      const idToName: Record<
+        string,
+        { name: string | undefined; phoneNumber: string | null | undefined }
+      > = {};
       ids.forEach((id, index) => {
-        idToName[id] = names[index];
+        idToName[id] = namesAndPhoneNumbers[index];
       });
       setIdToName(idToName);
+      setIsLoading(false);
     };
     fetchNames();
   }, [transactions]);
@@ -126,27 +142,52 @@ const Home = () => {
           <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[500px_1fr] lg:grid-cols-[750px_1fr]">
             <div className="grid gap-4 text-sm">
               {transactions.length === 0 && <p>No transactions yet 😌</p>}
-              {transactions.map((transaction) => (
-                <p key={transaction.createdAt}>
-                  {transaction.type === "topup" ? (
-                    <span className="text-emerald-400">
-                      You top up ${transaction.amount} on{" "}
-                      {formatDate(transaction.createdAt)}
-                    </span>
-                  ) : transaction.type === "withdraw" ? (
-                    <span className="text-rose-400">
-                      You withdraw ${transaction.amount} on{" "}
-                      {formatDate(transaction.createdAt)}
-                    </span>
-                  ) : transaction.type === "transfer" ? (
-                    <span>
-                      You transfer ${transaction.amount} to{" "}
-                      {transaction.to ? idToName[transaction.to] : "someone"} on{" "}
-                      {formatDate(transaction.createdAt)}
-                    </span>
-                  ) : null}
-                </p>
-              ))}
+              {isLoading ||
+                transactions.map((transaction) => (
+                  <p key={transaction.createdAt}>
+                    {transaction.type === "topup" ? (
+                      <span className="text-emerald-400">
+                        You top up ${transaction.amount} on{" "}
+                        {formatDate(transaction.createdAt)}
+                      </span>
+                    ) : transaction.type === "withdraw" ? (
+                      <span className="text-rose-400">
+                        You withdraw ${transaction.amount} on{" "}
+                        {formatDate(transaction.createdAt)}
+                      </span>
+                    ) : transaction.type === "transfer" ? (
+                      transaction.to === uid ? (
+                        <span>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {idToName[transaction.from!]?.name || "Someone"}
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {idToName[transaction.from!]?.phoneNumber ||
+                                "Number not found"}
+                            </TooltipContent>
+                          </Tooltip>
+                          transfer ${transaction.amount} to you on{" "}
+                          {formatDate(transaction.createdAt)}
+                        </span>
+                      ) : (
+                        <span>
+                          You transfer ${transaction.amount} to{" "}
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {idToName[transaction.to!]?.name || "someone"}
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {idToName[transaction.to!]?.phoneNumber ||
+                                "Number not found"}
+                            </TooltipContent>
+                          </Tooltip>{" "}
+                          on {formatDate(transaction.createdAt)}
+                        </span>
+                      )
+                    ) : null}
+                  </p>
+                ))}
             </div>
           </div>
         </>
