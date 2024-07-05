@@ -34,6 +34,7 @@ const SignUpForm = () => {
         navigate("/");
       } else {
         setIsDisabled(false);
+        unsubscribeAuth();
       }
     });
 
