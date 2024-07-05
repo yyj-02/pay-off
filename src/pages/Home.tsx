@@ -1,4 +1,4 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Dashboard, Pages } from "@/components/dashboard";
 import {
   Tooltip,
