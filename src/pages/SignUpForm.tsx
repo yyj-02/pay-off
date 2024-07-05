@@ -66,6 +66,8 @@ const SignUpForm = () => {
         variant: "default",
         title: "Account created successfully.",
       });
+
+      navigate("/");
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
